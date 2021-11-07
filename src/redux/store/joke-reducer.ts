@@ -38,7 +38,40 @@ export const initialState: StateType = {
     joke: ''
 }
 
-const jokeReducer = (state: StateType = initialState, action: any): StateType => {
+//ACTIONS TYPES
+type setJokesType = {
+    type: typeof SET_JOKES
+    payload: Array<JokeType>
+}
+
+type setJokeType = {
+    type: typeof SET_JOKE
+    payload: string
+}
+
+type setMoreJokesType = {
+    type: typeof SET_MORE_JOKES
+    payload: Array<JokeType>
+}
+
+type setSortedJokesType = {
+    type: typeof SET_SORTED_JOKES
+    payload: string
+}
+
+type setCategoriesType = {
+    type: typeof SET_CATEGORIES
+    payload: Array<string>
+}
+
+type setInitialRenderType = {
+    type: typeof SET_INITIAL_RENDER
+}
+
+type ActionsType = setJokesType | setJokeType | setMoreJokesType | setSortedJokesType | setCategoriesType | setInitialRenderType
+
+//REDUCER
+const jokeReducer = (state: StateType = initialState, action: ActionsType): StateType => {
     switch (action.type) {
         case SET_JOKES:
             return {
@@ -98,11 +131,6 @@ const jokeReducer = (state: StateType = initialState, action: any): StateType =>
     }
 }
 //GET JOKES
-type setJokesType = {
-    type: typeof SET_JOKES
-    payload: Array<JokeType>
-}
-
 export const setJokes = (jokes: Array<JokeType>): setJokesType => {
     return {
         type: SET_JOKES,
@@ -121,11 +149,6 @@ export const getJokes = (): getJokesType => {
 }
 
 //GET JOKE
-type setJokeType = {
-    type: typeof SET_JOKE
-    payload: string
-}
-
 export const setJoke = (joke: string): setJokeType => {
     return {
         type: SET_JOKE,
@@ -146,11 +169,6 @@ export const getJoke = (id: undefined | string): getJokeType => {
 }
 
 //GET MORE JOKES
-type setMoreJokesType = {
-    type: typeof SET_MORE_JOKES
-    payload: Array<JokeType>
-}
-
 export const setMoreJokes = (newJokes: Array<JokeType>): setMoreJokesType => {
     return {
         type: SET_MORE_JOKES,
@@ -171,11 +189,6 @@ export const getMoreJokes = (numOfJokes: string): getMoreJokesType => {
 }
 
 //SORT JOKES
-type setSortedJokesType = {
-    type: typeof SET_SORTED_JOKES
-    payload: string
-}
-
 export const setSortedJokes = (category: string): setSortedJokesType => {
     return {
         type: SET_SORTED_JOKES,
@@ -184,11 +197,6 @@ export const setSortedJokes = (category: string): setSortedJokesType => {
 }
 
 //GET CATEGORIES
-type setCategoriesType = {
-    type: typeof SET_CATEGORIES
-    payload: Array<string>
-}
-
 export const setCategories = (categories: Array<string>): setCategoriesType => {
     return {
         type: SET_CATEGORIES,
@@ -207,10 +215,6 @@ export const getCategories = (): getCategoriesType => {
 }
 
 //INITIAL RENDER
-type setInitialRenderType = {
-    type: typeof SET_INITIAL_RENDER
-}
-
 export const setInitialRender = (): setInitialRenderType => {
     return {
         type: SET_INITIAL_RENDER
