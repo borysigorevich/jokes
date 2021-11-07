@@ -14,17 +14,31 @@ export const GET_CATEGORIES = 'axels-test/joke/GET_CATEGORIES'
 
 const SET_INITIAL_RENDER = 'axels-test/joke/SET_INITIAL_RENDER'
 
-const initialState = {
+export type JokeType = {
+    id: number,
+    joke: string,
+    categories: Array<string>
+}
+
+export type StateType = {
+    jokes: Array<JokeType>
+    sortedJokes: Array<JokeType>
+    categories: Array<string>
+    category: string
+    initialRender: boolean
+    joke: string
+}
+
+export const initialState: StateType = {
     jokes: [],
     sortedJokes: [],
-    numOfJokes: 3,
     categories: [],
     category: 'all',
     initialRender: true,
     joke: ''
 }
 
-const jokeReducer = (state = initialState, action) => {
+const jokeReducer = (state: StateType = initialState, action: any): StateType => {
     switch (action.type) {
         case SET_JOKES:
             return {
@@ -45,12 +59,12 @@ const jokeReducer = (state = initialState, action) => {
         case SET_MORE_JOKES:
             return {
                 ...state,
-                jokes: [...state.jokes, ...action.payload.filter(joke => {
+                jokes: [...state.jokes, ...action.payload.filter((joke: JokeType) => {
                     return !state.jokes.some(stateJoke => {
                         return stateJoke.id === joke.id
                     })
                 })],
-                sortedJokes: [...state.jokes, ...action.payload.filter(joke => {
+                sortedJokes: [...state.jokes, ...action.payload.filter((joke: JokeType) => {
                     return !state.jokes.some(stateJoke => {
                         return stateJoke.id === joke.id
                     })
@@ -84,27 +98,47 @@ const jokeReducer = (state = initialState, action) => {
     }
 }
 //GET JOKES
-export const setJokes = jokes => {
+type setJokesType = {
+    type: typeof SET_JOKES
+    payload: Array<JokeType>
+}
+
+export const setJokes = (jokes: Array<JokeType>): setJokesType => {
     return {
         type: SET_JOKES,
         payload: jokes
     }
 }
-export const getJokes = () => {
+
+type getJokesType = {
+    type: typeof GET_JOKES
+}
+
+export const getJokes = (): getJokesType => {
     return {
         type: GET_JOKES
     }
 }
 
 //GET JOKE
-export const setJoke = joke => {
+type setJokeType = {
+    type: typeof SET_JOKE
+    payload: string
+}
+
+export const setJoke = (joke: string): setJokeType => {
     return {
         type: SET_JOKE,
         payload: joke
     }
 }
 
-export const getJoke = id => {
+export type getJokeType = {
+    type: typeof GET_JOKE
+    payload: undefined | string
+}
+
+export const getJoke = (id: undefined | string): getJokeType => {
     return {
         type: GET_JOKE,
         payload: id
@@ -112,13 +146,24 @@ export const getJoke = id => {
 }
 
 //GET MORE JOKES
-export const setMoreJokes = newJokes => {
+type setMoreJokesType = {
+    type: typeof SET_MORE_JOKES
+    payload: Array<JokeType>
+}
+
+export const setMoreJokes = (newJokes: Array<JokeType>): setMoreJokesType => {
     return {
         type: SET_MORE_JOKES,
         payload: newJokes
     }
 }
-export const getMoreJokes = numOfJokes => {
+
+export type getMoreJokesType = {
+    type: typeof GET_MORE_JOKES
+    payload: string
+}
+
+export const getMoreJokes = (numOfJokes: string): getMoreJokesType => {
     return {
         type: GET_MORE_JOKES,
         payload: numOfJokes
@@ -126,7 +171,12 @@ export const getMoreJokes = numOfJokes => {
 }
 
 //SORT JOKES
-export const setSortedJokes = category => {
+type setSortedJokesType = {
+    type: typeof SET_SORTED_JOKES
+    payload: string
+}
+
+export const setSortedJokes = (category: string): setSortedJokesType => {
     return {
         type: SET_SORTED_JOKES,
         payload: category
@@ -134,20 +184,34 @@ export const setSortedJokes = category => {
 }
 
 //GET CATEGORIES
-export const setCategories = categories => {
+type setCategoriesType = {
+    type: typeof SET_CATEGORIES
+    payload: Array<string>
+}
+
+export const setCategories = (categories: Array<string>): setCategoriesType => {
     return {
         type: SET_CATEGORIES,
         payload: categories
     }
 }
-export const getCategories = () => {
+
+type getCategoriesType = {
+    type: typeof GET_CATEGORIES
+}
+
+export const getCategories = (): getCategoriesType => {
     return {
         type: GET_CATEGORIES
     }
 }
 
 //INITIAL RENDER
-export const setInitialRender = () => {
+type setInitialRenderType = {
+    type: typeof SET_INITIAL_RENDER
+}
+
+export const setInitialRender = (): setInitialRenderType => {
     return {
         type: SET_INITIAL_RENDER
     }

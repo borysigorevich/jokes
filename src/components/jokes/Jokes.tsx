@@ -5,14 +5,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     getCategories,
     getJokes,
-    getMoreJokes,
-    setInitialRender, setSortedJokes,
+    getMoreJokes, JokeType,
+    setInitialRender, setSortedJokes
 } from "../../redux/store/joke-reducer";
+import {RootState} from "../../redux/store/store";
 
 
 const Jokes = () => {
 
-    const jokesState = useSelector(({jokes}) => jokes)
+    const jokesState = useSelector((state: RootState) => state.jokes)
     const dispatch = useDispatch()
     const [numOfJokes, setNumOfJokes] = useState('')
 
@@ -46,11 +47,11 @@ const Jokes = () => {
         }
     }
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         setNumOfJokes(e.target.value)
     }
 
-    const onHandleCategoriesChange = e => {
+    const onHandleCategoriesChange = (e: any) => {
         dispatch(setSortedJokes(e.target.value))
     }
 
@@ -58,14 +59,14 @@ const Jokes = () => {
         <Container>
             <Select onChange={onHandleCategoriesChange}>
                 <option value="all">All</option>
-                {jokesState.categories.map(category => {
+                {jokesState.categories.map((category: string) => {
                     return <option key={category}
                                    value={category}>{category[0].toUpperCase() + category.substring(1)}</option>
                 })}
             </Select>
             <span>Choose the category</span>
             <List>
-                {jokesState.sortedJokes.map(joke => (
+                {jokesState.sortedJokes.map((joke: JokeType) => (
                     <li key={joke.id}>
                         <Link className={'link'} to={`/joke/${joke.id}`}>
                             {joke.joke.length > 100 ? joke.joke.substring(0, 100) + '...' : joke.joke}

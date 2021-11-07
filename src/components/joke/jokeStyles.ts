@@ -6,4 +6,3 @@ export const Container = styled.div`
   padding: 10px 16px;
   text-align: center;
 `
-
