@@ -8,6 +8,7 @@ export const Container = styled.div`
 
 export const Select = styled.select`
   margin-bottom: 10px;
+  margin-right: 5px;
   padding: 3px;
   border: 1px solid teal;
   border-radius: 4px;

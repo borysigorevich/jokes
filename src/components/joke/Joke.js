@@ -1,23 +1,26 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {useParams} from "react-router-dom";
 import {Container} from "./jokeStyles";
-import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
+import {getJoke} from "../../redux/store/joke-reducer";
 
 const Joke = () => {
-    const [joke, setJoke] = useState('')
+    const jokesState = useSelector(({jokes}) => jokes)
+    const dispatch = useDispatch()
+
     const params = useParams()
 
     useEffect(() => {
-        const getJoke = async () => {
-            const res = await axios.get('http://api.icndb.com/jokes/' + params.id)
-            setJoke(res.data.value.joke)
+        try {
+            dispatch(getJoke(params.id))
+        } catch (err) {
+            console.log(err)
         }
-        getJoke()
-    }, [params.id])
+    }, [params.id, dispatch])
 
     return (
         <Container>
-            <i>{joke}</i>
+            <i>{jokesState.joke}</i>
         </Container>
     );
 };
