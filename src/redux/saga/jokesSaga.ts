@@ -1,35 +1,26 @@
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosResponse} from 'axios';
 import {put, takeEvery} from 'redux-saga/effects'
 
 import {
     GET_CATEGORIES, GET_JOKE,
     GET_JOKES,
-    GET_MORE_JOKES, getJokeType, getMoreJokesType,
+    GET_MORE_JOKES, getJokesType, getJokeType, getMoreJokesType,
     setCategories, setJoke,
     setJokes,
     setMoreJokes
-} from "../store/joke-reducer";
+} from '../store/joke-reducer';
 
-const getJokes = async () => {
-    return await axios.get('http://api.icndb.com/jokes/random/3')
-}
+const getJokes = async () => await axios.get('http://api.icndb.com/jokes/random/3')
 
-const getJoke = async (id: undefined | string) => {
-    return await axios.get('http://api.icndb.com/jokes/' + id)
-}
+const getJoke = async (id: undefined | string) => await axios.get('http://api.icndb.com/jokes/' + id)
 
-const getCategories = async () => {
-    return await axios.get('http://api.icndb.com/categories')
-}
+const getCategories = async () => await axios.get('http://api.icndb.com/categories')
 
-const getMoreJokes = async (numOfJokes: string) => {
-    return await axios.get('http://api.icndb.com/jokes/random/' + (numOfJokes ? numOfJokes : '3'))
-}
+const getMoreJokes = async (numOfJokes: string) => await axios.get('http://api.icndb.com/jokes/random/' + (numOfJokes ? numOfJokes : '3'))
 
-
-function* getJokesWorker() {
+function* getJokesWorker(action: getJokesType) {
     const res: AxiosResponse = yield getJokes()
-    yield put(setJokes(res.data.value))
+    yield put(setJokes(res.data.value, action.payload))
 }
 
 function* getJokeWorker(action: getJokeType) {

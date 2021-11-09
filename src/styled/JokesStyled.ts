@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {Button, Nav, Popover} from 'react-bootstrap';
+import {Button, Nav} from 'react-bootstrap';
 
 export const Styles = styled.div`
   .border-secondary {
