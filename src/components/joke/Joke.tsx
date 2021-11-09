@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
+
 import {getJoke} from '../../redux/store/joke-reducer';
 import {RootState} from '../../redux/store/store';
 

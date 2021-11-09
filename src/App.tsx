@@ -1,11 +1,12 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import {Container} from 'react-bootstrap';
-import Jokes from './components/jokes/Jokes';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import {Container} from 'react-bootstrap';
 import {Provider} from 'react-redux';
-import {store} from './redux/store/store';
 import {ThemeProvider} from 'styled-components';
+
+import Jokes from './components/jokes/Jokes';
+import {store} from './redux/store/store';
 import {theme} from './styled/GlobalStyles';
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 
 function App() {

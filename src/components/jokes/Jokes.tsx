@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import {Link, useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
+
 import {CardGroup, ListGroup, Nav, Navbar, OverlayTrigger, Popover} from 'react-bootstrap';
 import {
     getCategories,
@@ -8,9 +9,9 @@ import {
     getMoreJokes, JokeType,
     setInitialRender, setSortedJokes
 } from '../../redux/store/joke-reducer';
-import {RootState} from '../../redux/store/store';
 import {CustomButton, CustomNavLink, FlexDiv, Styles} from '../../styled/JokesStyled';
 
+import {RootState} from '../../redux/store/store';
 
 const Jokes = () => {
 

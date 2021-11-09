@@ -1,5 +1,6 @@
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga'
+
 import {jokesWatcher} from '../saga/jokesSaga';
 import jokeReducer, {StateType} from './joke-reducer';
 
