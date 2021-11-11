@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 
-import {put, takeEvery} from 'redux-saga/effects'
+import {put, takeEvery} from 'redux-saga/effects';
 import {getCategoriesAPI, getJokeAPI, getJokesAPI, getMoreJokesAPI} from "../../api";
 
 const SENT_REQUEST = 'SENT_REQUEST';
