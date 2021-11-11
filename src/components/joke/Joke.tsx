@@ -2,16 +2,14 @@ import React, {useEffect} from 'react'
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {getJoke} from '../../redux/store/joke-reducer';
-import {RootState} from '../../redux/store/store';
+import {getJoke} from '../../redux/ducks/jokes';
+import {RootState} from '../../redux/store';
 
 const Joke = () => {
-    const jokesState = useSelector((state: RootState) => state.jokes)
-    const dispatch = useDispatch()
+    const jokesState = useSelector((state: RootState) => state.jokes);
+    const dispatch = useDispatch();
 
-    const params = useParams()
-
-    console.log(params)
+    const params = useParams();
 
     useEffect(() => {
         try {

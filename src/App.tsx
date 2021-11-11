@@ -1,30 +1,28 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
-import {Container} from 'react-bootstrap';
-import {Provider} from 'react-redux';
-import {ThemeProvider} from 'styled-components';
+import {Container} from 'react-bootstrap'
+import {Provider} from 'react-redux'
+import {ThemeProvider} from 'styled-components'
 
-import Jokes from './components/jokes/Jokes';
-import {store} from './redux/store/store';
-import {theme} from './styled/GlobalStyles';
+import Jokes from './components/jokes/Jokes'
+import {store} from './redux/store'
+import {theme} from './styled/GlobalStyles'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 
-function App() {
+const App = () => (
+    <ThemeProvider theme={theme}>
+        <Provider store={store}>
+            <Router>
+                <Container className='App py-3'>
+                    <Routes>
+                        <Route path={'/'} element={<Jokes/>}/>
+                        <Route path={'/:category'} element={<Jokes/>}/>
+                        <Route path={'/joke/:joke'} element={<Jokes/>}/>
+                    </Routes>
+                </Container>
+            </Router>
+        </Provider>
+    </ThemeProvider>
+)
 
-    return (
-        <ThemeProvider theme={theme}>
-            <Provider store={store}>
-                <Router>
-                    <Container className='App py-3'>
-                        <Routes>
-                            <Route path={'/'} element={<Jokes/>}/>
-                            <Route path={'/:category'} element={<Jokes/>}/>
-                        </Routes>
-                    </Container>
-                </Router>
-            </Provider>
-        </ThemeProvider>
-    );
-}
-
-export default App;
+export default App

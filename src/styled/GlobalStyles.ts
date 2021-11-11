@@ -4,6 +4,15 @@ export const Global = createGlobalStyle`
   * {
     font-family: 'Nunito', sans-serif;
   }
+  
+  .list-group li {
+    cursor: pointer;
+  }
+  
+  .link {
+    color: inherit;
+    text-decoration: none;
+  }
 `
 
 export const theme = {
@@ -15,7 +24,7 @@ export const theme = {
         black: 'rgba(0,0,0,.9)'
     },
     media: {
-        phone: '(max-width: 425px)'
+        medium: '(max-width: 767px)'
     },
     size: {
         md_nav: '5rem',

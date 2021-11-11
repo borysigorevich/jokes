@@ -1,109 +1,130 @@
-import React, {useEffect} from 'react'
-import {Link, useParams} from 'react-router-dom';
+import React, {useEffect, useState} from 'react'
+import {Link, useParams, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {CardGroup, ListGroup, Nav, Navbar, OverlayTrigger, Popover} from 'react-bootstrap';
+import {Button, CardGroup, ListGroup, Modal, Nav, Navbar, Spinner} from 'react-bootstrap';
 import {
     getCategories,
     getJokes,
-    getMoreJokes, JokeType,
-    setInitialRender, setSortedJokes
-} from '../../redux/store/joke-reducer';
-import {CustomButton, CustomNavLink, FlexDiv, Styles} from '../../styled/JokesStyled';
+    getMoreJokes, JokeType, setIsLoading,
+    setSortedJokes
+} from '../../redux/ducks/jokes';
+import {CustomButton, CustomNavbar, CustomNavbarBrand, CustomNavLink, FlexDiv, Styles} from '../../styled/JokesStyled';
 
-import {RootState} from '../../redux/store/store';
+import {RootState} from '../../redux/store';
 
 const Jokes = () => {
 
-    const jokesState = useSelector((state: RootState) => state.jokes)
-    const dispatch = useDispatch()
-    const params = useParams()
+    const jokesState = useSelector((state: RootState) => state.jokes);
+    const dispatch = useDispatch();
+    const params = useParams();
+    const navigate = useNavigate();
+
+    if (params.joke) {
+        const joke = jokesState.jokes.find(joke => joke.id === parseInt(params.joke!))
+        joke && localStorage.setItem('joke', JSON.stringify(joke))
+    }
+
+    const [show, setShow] = useState<boolean>(!!params.joke);
+
+    const handleClose = () => {
+        localStorage.removeItem('joke')
+        navigate('/')
+        setShow(false)
+    }
+    const handleShow = () => setShow(true)
 
     useEffect(() => {
         if (jokesState.initialRender) {
-            try {
-                dispatch(getJokes(params.category ? params.category : 'all'))
-                dispatch(setInitialRender())
-            } catch (err) {
-                console.log(err)
-            }
+            dispatch(getJokes(params.category ? params.category : 'all',
+                jokesState.jokes.length > 0 ? '2' : '3'))
+            dispatch(getCategories())
         }
-    }, [dispatch, jokesState.initialRender, params.category])
+    }, [dispatch, jokesState.initialRender, params.category, jokesState.jokes.length])
 
     useEffect(() => {
-        try {
-            params.category && dispatch(setSortedJokes(params.category))
-        } catch (err) {
-            console.log(err)
-        }
+        params.category && dispatch(setSortedJokes(params.category))
     }, [dispatch, params.category])
 
     useEffect(() => {
-        if (jokesState.initialRender) {
-            try {
-                dispatch(getCategories())
-            } catch (err) {
-                console.log(err)
-            }
-        }
-    }, [dispatch, jokesState.initialRender])
+        jokesState.error.message && setShow(true)
+    }, [jokesState.error])
 
     const handleClick = async (numOfJokes: string) => {
-        try {
-            dispatch(getMoreJokes(numOfJokes))
-        } catch (err) {
-            console.log(err)
-        }
+        dispatch(setIsLoading())
+        dispatch(getMoreJokes(numOfJokes))
     }
 
     return (
         <Styles>
-            <Navbar expand={'md'} className={'justify-content-between'}>
-                <Navbar.Brand>Choose the category</Navbar.Brand>
-                <Navbar.Toggle aria-controls={'navbar'}/>
-                <Navbar.Collapse id={'navbar'} className={'justify-content-end'}>
+            <CustomNavbar expand="md" className="justify-content-between">
+                <CustomNavbarBrand>Choose the category</CustomNavbarBrand>
+                <Navbar.Toggle aria-controls="navbar"/>
+                <Navbar.Collapse id="navbar" className="justify-content-end">
                     <Nav>
                         <CustomNavLink as={Link}
-                                       key={'all'}
-                                       to={'/all'}
-                                       className={'mb-2 mt-3 mt-sm-0 mb-md-0 me-md-2'}
+                                       key="all"
+                                       to="/all"
+                                       className="mb-2 mt-3 mt-sm-0 mb-md-0 me-md-2"
                         >All</CustomNavLink>
-                        {jokesState.categories.map((category: string, index) => <CustomNavLink as={Link}
-                                                                                        key={category}
-                                                                                        className={`mb-2 mb-md-0 me-md-${jokesState.categories.length - 1 === index ? 0 : 2}`}
-                                                                                        to={'/' + category}>{category[0].toUpperCase() + category.substring(1)}</CustomNavLink>)}
+                        {jokesState.categories.map((category: string, index) =>
+                            <CustomNavLink as={Link}
+                                           key={category}
+                                           className={`mb-${jokesState.categories.length - 1 === index ? 0 : 2}
+                                            mb-md-0 me-md-${jokesState.categories.length - 1 === index ? 0 : 2}`}
+                                           to={'/' + category}>
+                                {category[0].toUpperCase() + category.substring(1)}</CustomNavLink>)}
                     </Nav>
                 </Navbar.Collapse>
-            </Navbar>
-            <CardGroup className={'justify-content-center'}>
-                <ListGroup as={'ul'} className={'w-100'}>
+            </CustomNavbar>
+            <CardGroup className="justify-content-center">
+                <ListGroup as="ul" className="w-100">
                     {jokesState.sortedJokes.length > 0
                         ? jokesState.sortedJokes.map((joke: JokeType) => (
-                            <OverlayTrigger
-                                trigger={'click'}
-                                key={joke.id}
-                                placement={'bottom'}
-                                overlay={
-                                    <Popover>
-                                        <Popover.Body>
-                                            {joke.joke}
-                                        </Popover.Body>
-                                    </Popover>
-                                }>
-                                <ListGroup.Item as={'li'} key={joke.id}
-                                                className={'border border-secondary my-1 rounded'}>
+                            <Link className="link" key={joke.id} to={'/joke/' + joke.id}>
+                                <ListGroup.Item onClick={handleShow} as="li"
+                                                className="border border-secondary my-1 rounded">
                                     {joke.joke.length > 100 ? joke.joke.substring(0, 100) + '...' : joke.joke}
                                 </ListGroup.Item>
-                            </OverlayTrigger>))
-                        : <p className={'fs-3 text-secondary'}>Ooops!! There are no jokes! Get Some!</p>
+                            </Link>))
+                        : <p className="fs-3 text-secondary">Ooops!! There are no jokes! Get Some!</p>
                     }
                 </ListGroup>
+                <Modal
+                    show={show}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Joke</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {jokesState.error.message
+                            ? jokesState.error.message
+                            : jokesState.jokes.filter(joke => parseInt(params.joke!) === joke.id)[0]?.joke
+                        }
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
             </CardGroup>
             <FlexDiv>
-                <CustomButton className={'btn-secondary'} onClick={() => handleClick('1')}>Get One Joke!</CustomButton>
-                <CustomButton className={'btn-secondary'} onClick={() => handleClick('3')}>Get Three
+                {jokesState.isLoading && <Spinner animation="border"/>}
+            </FlexDiv>
+            <FlexDiv>
+                <CustomButton className="btn-secondary"
+                              onClick={() => handleClick('1')}>Get One Joke!</CustomButton>
+                <CustomButton className="btn-secondary"
+                              onClick={() => handleClick('3')}>Get Three
                     Jokes!</CustomButton>
-                <CustomButton className={'btn-secondary'} onClick={() => handleClick('5')}>Get Five Jokes!</CustomButton>
+                <CustomButton className="btn-secondary"
+                              onClick={() => handleClick('5')}>Get Five
+                    Jokes!</CustomButton>
             </FlexDiv>
         </Styles>
     );

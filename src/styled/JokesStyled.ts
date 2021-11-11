@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {Button, Nav} from 'react-bootstrap';
+import {Button, Nav, Navbar} from 'react-bootstrap';
 
 export const Styles = styled.div`
   .border-secondary {
@@ -14,7 +14,7 @@ export const Styles = styled.div`
     background-color: ${props => props.theme.color.secondary};
     border: none;
   }
-  
+
   .popover-body {
     color: ${props => props.theme.color.teal}
   }
@@ -22,6 +22,18 @@ export const Styles = styled.div`
 
 export const CustomButton = styled(Button)`
   width: ${props => props.theme.size.lg_button}
+`
+
+export const CustomNavbar = styled(Navbar)`
+  padding-bottom: 0;
+
+  @media ${({theme}) => theme.media.medium} {
+    margin-bottom: 4px;
+  }
+`
+
+export const CustomNavbarBrand = styled(Navbar.Brand)`
+  padding-bottom: 0;
 `
 
 export const CustomNavLink = styled(Nav.Link)`
@@ -42,9 +54,15 @@ export const CustomNavLink = styled(Nav.Link)`
 `
 
 export const FlexDiv = styled.div`
+  .spinner-border {
+    margin-bottom: 4px;
+    color: teal;
+  }
+  
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
   flex-wrap: wrap;
+  margin-top: 4px;
 `
