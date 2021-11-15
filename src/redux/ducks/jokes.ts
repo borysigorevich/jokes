@@ -1,24 +1,20 @@
-import {AxiosResponse} from 'axios';
+import {call, put, takeEvery} from 'redux-saga/effects';
+import {API} from "../../api";
+import {SagaIterator} from "redux-saga";
 
-import {put, takeEvery} from 'redux-saga/effects';
-import {getCategoriesAPI, getJokeAPI, getJokesAPI, getMoreJokesAPI} from "../../api";
+export const SENT_REQUEST = 'axels-test/joke/SENT_REQUEST';
 
-const SENT_REQUEST = 'SENT_REQUEST';
+export const REQUEST_FAILURE = 'axels-test/joke/REQUEST_FAILURE';
 
-const REQUEST_FAILURE = 'REQUEST_FAILURE';
-
-const SET_JOKES = 'axels-test/joke/SET_JOKES';
+export const SET_JOKES = 'axels-test/joke/SET_JOKES';
 export const GET_JOKES = 'axels-test/joke/GET_JOKES';
 
-const SET_JOKE = 'axels-test/joke/SET_JOKE';
-export const GET_JOKE = 'axels-test/joke/GET_JOKE';
-
-const SET_MORE_JOKES = 'axels-test/joke/SET_MORE_JOKES';
+export const SET_MORE_JOKES = 'axels-test/joke/SET_MORE_JOKES';
 export const GET_MORE_JOKES = 'axels-test/joke/GET_MORE_JOKES';
 
-const SET_SORTED_JOKES = 'axels-test/joke/SET_SORTED_JOKES';
+export const SET_SORTED_JOKES = 'axels-test/joke/SET_SORTED_JOKES';
 
-const SET_CATEGORIES = 'axels-test/joke/SET_CATEGORIES';
+export const SET_CATEGORIES = 'axels-test/joke/SET_CATEGORIES';
 export const GET_CATEGORIES = 'axels-test/joke/GET_CATEGORIES';
 
 export type JokeType = {
@@ -56,12 +52,12 @@ export const initialState: StateType = {
 };
 
 //ACTIONS TYPES
-type requestFailureType = {
+export type requestFailureType = {
     type: typeof REQUEST_FAILURE,
     payload: string
 }
 
-type sentRequest = {
+export type sentRequestType = {
     type: typeof SENT_REQUEST
 }
 
@@ -70,34 +66,33 @@ export type setJokesType = {
     payload: { jokes: Array<JokeType>, category: string }
 }
 
-type setJokeType = {
-    type: typeof SET_JOKE
-    payload: string
-}
-
-type setMoreJokesType = {
+export type setMoreJokesType = {
     type: typeof SET_MORE_JOKES
     payload: Array<JokeType>
 }
 
-type setSortedJokesType = {
+export type setSortedJokesType = {
     type: typeof SET_SORTED_JOKES
     payload: string
 }
 
-type setCategoriesType = {
+export type setCategoriesType = {
     type: typeof SET_CATEGORIES
     payload: Array<string>
 }
 
-type ActionsType =
+export type ActionsType =
     setJokesType |
-    setJokeType |
     setMoreJokesType |
     setSortedJokesType |
     setCategoriesType |
     requestFailureType |
-    sentRequest
+    sentRequestType
+
+export type SagaActionsType =
+    getJokesType |
+    getMoreJokesType |
+    getCategoriesType
 
 //REDUCER
 const jokeReducer = (state: StateType = initialState, action: ActionsType): StateType => {
@@ -115,11 +110,6 @@ const jokeReducer = (state: StateType = initialState, action: ActionsType): Stat
                 }),
                 initialRender: false,
                 isLoading: false
-            }
-        case SET_JOKE:
-            return {
-                ...state,
-                joke: action.payload
             }
         case SET_CATEGORIES:
             return {
@@ -183,12 +173,12 @@ const jokeReducer = (state: StateType = initialState, action: ActionsType): Stat
 //*******ACTIONS CREATORS********
 
 //SENT REQUEST
-export const setIsLoading = () => ({
+export const setIsLoading = (): sentRequestType => ({
     type: SENT_REQUEST
 })
 
 //REQUEST FAILURE
-export const requestFailure = (error: string) => ({
+export const requestFailure = (error: string): requestFailureType => ({
     type: REQUEST_FAILURE,
     payload: error
 })
@@ -204,26 +194,13 @@ export type getJokesType = {
     payload: { category: string, numOfJokes: string }
 }
 
-export const getJokes = (category: string, numOfJokes: string): getJokesType => ({
-    type: GET_JOKES,
-    payload: {category, numOfJokes}
-})
-
-//GET JOKE
-export const setJoke = (joke: string): setJokeType => ({
-    type: SET_JOKE,
-    payload: joke
-})
-
-export type getJokeType = {
-    type: typeof GET_JOKE
-    payload: undefined | string
+export const getJokes = (category: string, numOfJokes: string): getJokesType => {
+    console.log('here while testing get jokes')
+    return {
+        type: GET_JOKES,
+        payload: {category, numOfJokes}
+    }
 }
-
-export const getJoke = (id: undefined | string): getJokeType => ({
-    type: GET_JOKE,
-    payload: id
-})
 
 //GET MORE JOKES
 export const setMoreJokes = (newJokes: Array<JokeType>): setMoreJokesType => ({
@@ -257,44 +234,38 @@ type getCategoriesType = {
     type: typeof GET_CATEGORIES
 }
 
-export const getCategories = (): getCategoriesType => ({
-    type: GET_CATEGORIES
-})
+export const getCategories = (): getCategoriesType => {
+    console.log('here while testing')
+    return {
+        type: GET_CATEGORIES
+    }
+}
 //*********************
 
 
 //SAGA WORKERS
-function* getJokesWorker(action: getJokesType) {
+export function* getJokesWorker(action: getJokesType): SagaIterator {
     try {
-        const res: AxiosResponse = yield getJokesAPI(action.payload.numOfJokes)
-        yield put(setJokes(res.data.value, action.payload.category))
+        const res: Array<JokeType> = yield call(API.getJokes, action.payload.numOfJokes)
+        yield put(setJokes(res, action.payload.category))
     } catch (e: any) {
         yield put(requestFailure((e as Error).message))
     }
 }
 
-function* getJokeWorker(action: getJokeType) {
+export function* getCategoriesWorker(): SagaIterator {
     try {
-        const res: AxiosResponse = yield getJokeAPI(action.payload)
-        yield put(setJoke(res.data.value.joke))
+        const res: Array<string> = yield call(API.getCategories)
+        yield put(setCategories(res))
     } catch (e) {
         yield put(requestFailure((e as Error).message))
     }
 }
 
-function* getCategoriesWorker() {
+export function* getMoreJokesWorker(action: getMoreJokesType): SagaIterator {
     try {
-        const res: AxiosResponse = yield getCategoriesAPI()
-        yield put(setCategories(res.data.value))
-    } catch (e) {
-        yield put(requestFailure((e as Error).message))
-    }
-}
-
-function* getMoreJokesWorker(action: getMoreJokesType) {
-    try {
-        const res: AxiosResponse = yield getMoreJokesAPI(action.payload)
-        yield put(setMoreJokes(res.data.value))
+        const res: Array<JokeType> = yield call(API.getMoreJokes, action.payload)
+        yield put(setMoreJokes(res))
     } catch (e) {
         yield put(requestFailure((e as Error).message))
     }
@@ -305,8 +276,6 @@ export function* jokesWatcher() {
     yield takeEvery(GET_JOKES, getJokesWorker)
     yield takeEvery(GET_CATEGORIES, getCategoriesWorker)
     yield takeEvery(GET_MORE_JOKES, getMoreJokesWorker)
-    yield takeEvery(GET_JOKE, getJokeWorker)
 }
-
 
 export default jokeReducer
