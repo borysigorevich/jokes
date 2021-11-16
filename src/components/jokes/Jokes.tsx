@@ -1,22 +1,27 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, useEffect, useState} from 'react';
 import {Link, useParams, useNavigate} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import {connect} from 'react-redux';
 
 import {Button, CardGroup, ListGroup, Modal, Nav, Navbar, Spinner} from 'react-bootstrap';
 import {
     getCategories,
     getJokes,
     getMoreJokes, JokeType, setIsLoading,
-    setSortedJokes
+    setSortedJokes, StateType
 } from '../../redux/ducks/jokes';
 import {CustomButton, CustomNavbar, CustomNavbarBrand, CustomNavLink, FlexDiv, Styles} from '../../styled/JokesStyled';
-
 import {RootState} from '../../redux/store';
+import {actionsType} from "../../tests/Jokes.test";
 
-const Jokes = () => {
+type propsType = {
+    jokesState: StateType
+    dispatch: Dispatch<actionsType>
+}
 
-    const jokesState = useSelector((state: RootState) => state.jokes);
-    const dispatch = useDispatch();
+export const Jokes = ({jokesState, dispatch}: propsType) => {
+
+    // const jokesState = useSelector((state: RootState) => state.jokes);
+    // const dispatch = useDispatch();
     const params = useParams();
     const navigate = useNavigate();
 
@@ -130,4 +135,12 @@ const Jokes = () => {
     );
 };
 
-export default Jokes
+const mapStateToProps = (state: RootState) => ({
+    jokesState: state.jokes
+})
+
+const mapDispatchToProps = (dispatch: Dispatch<actionsType>) => ({
+    dispatch
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Jokes)

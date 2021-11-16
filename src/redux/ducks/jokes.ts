@@ -23,7 +23,7 @@ export type JokeType = {
     categories: Array<string>
 }
 
-type errorType = {
+export type errorType = {
     message: string
 }
 
@@ -278,4 +278,4 @@ export function* jokesWatcher() {
     yield takeEvery(GET_MORE_JOKES, getMoreJokesWorker)
 }
 
-export default jokeReducer
+export default jokeReducer;

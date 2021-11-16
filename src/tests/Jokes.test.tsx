@@ -1,6 +1,6 @@
 import Enzyme, {shallow} from "enzyme";
-import EnzymeAdapter from "@wojtekmaj/enzyme-adapter-react-17";
-import Jokes from "../components/jokes/Jokes";
+import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17';
+import {Jokes} from '../components/jokes/Jokes';
 import {
     GET_MORE_JOKES,
     SagaActionsType, SENT_REQUEST,
@@ -8,7 +8,7 @@ import {
     setSortedJokesType,
     StateType
 } from "../redux/ducks/jokes";
-import JokesTestVersion from "./JokesTestVersion";
+import {mockStore} from "./utils";
 
 Enzyme.configure({adapter: new EnzymeAdapter()})
 
@@ -19,136 +19,45 @@ export type PropsType = {
     dispatch: (action: actionsType) => void
 }
 
-const createJokesComponent = (props: PropsType) => shallow(<JokesTestVersion {...props}/>)
+const createJokesComponent = (props: PropsType) => shallow(<Jokes {...props}/>)
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useParams: () => ({
+        joke: '2',
+        category: 'all'
+    }),
+    useNavigate: () => ({
+        push: jest.fn()
+    })
+}))
 
 describe('Jokes', () => {
 
-    it('Three jokes after fetch', () => {
-        const mockStore = {
-            jokesState: {
-                jokes: [
-                    {id: 1, joke: 'haha', categories: ['nerdy']},
-                    {id: 2, joke: 'haha', categories: ['nerdy']},
-                    {id: 3, joke: 'haha', categories: ['nerdy']}],
-                sortedJokes: [
-                    {id: 1, joke: 'haha', categories: ['nerdy']},
-                    {id: 2, joke: 'haha', categories: ['nerdy']},
-                    {id: 3, joke: 'haha', categories: ['nerdy']}],
-                categories: [],
-                category: 'all',
-                initialRender: true,
-                joke: '',
-                isLoading: true,
-                error: {message: ''}
-            },
-            dispatch: (action: actionsType) => {
-
-            }
-        }
-        const component = createJokesComponent(mockStore)
-        expect(component.find('.link').length).toEqual(3)
+    afterEach(() => {
+        jest.clearAllMocks()
     })
 
-    it('No jokes', () => {
-        const mockStore = {
-            jokesState: {
-                jokes: [],
-                sortedJokes: [],
-                categories: [],
-                category: 'all',
-                initialRender: true,
-                joke: '',
-                isLoading: true,
-                error: {message: ''}
-            },
-            dispatch: (action: actionsType) => {
-
-            }
-        }
-        const component = createJokesComponent(mockStore)
-        expect(component.find('.link').length).toEqual(0)
+    it('snapshot', () => {
+        const component = createJokesComponent(mockStore({}))
+        expect(component).toMatchSnapshot()
     })
 
-    it('Three categories', () => {
-        const mockStore = {
-            jokesState: {
-                jokes: [],
-                sortedJokes: [],
-                categories: ['nerdy', 'explicit'],
-                category: 'all',
-                initialRender: true,
-                joke: '',
-                isLoading: true,
-                error: {message: ''}
-            },
-            dispatch: (action: actionsType) => {
-
-            }
-        }
-        const component = createJokesComponent(mockStore)
-        expect(component.find('.category').length).toEqual(3)
+    it('should be one joke', () => {
+        const component = createJokesComponent(mockStore({sortedJokes: [{id: 1, joke: 'haha', categories: ['nerdy']}]}))
+        expect(component.find('.link').length).toEqual(1)
     })
 
-    it('One category', () => {
-        const mockStore = {
-            jokesState: {
-                jokes: [],
-                sortedJokes: [],
-                categories: [],
-                category: 'all',
-                initialRender: true,
-                joke: '',
-                isLoading: true,
-                error: {message: ''}
-            },
-            dispatch: (action: actionsType) => {
-
-            }
-        }
-        const component = createJokesComponent(mockStore)
-        expect(component.find('.category').length).toEqual(1)
+    it('should be 2 categories', () => {
+        const component = createJokesComponent(mockStore({categories: ['nerdy', 'explicit']}))
+        expect(component.find('Styled(NavLink)').length).toEqual(3)
     })
 
-    it('Get more jokes button', () => {
+    it('should be 2 calls of the dispatch on get joke button click', () => {
         const dispatched: Array<actionsType> = []
-
-        const mockStore = {
-            jokesState: {
-                jokes: [],
-                sortedJokes: [],
-                categories: ['nerdy', 'explicit'],
-                category: 'all',
-                initialRender: true,
-                joke: '',
-                isLoading: true,
-                error: {message: ''}
-            },
-            dispatch: (action: actionsType) => {
-                dispatched.push(action)
-            }
-        }
-
-        const component = createJokesComponent(mockStore)
-        const btn = component.find('.one_joke')
+        const component = createJokesComponent(mockStore({dispatch: (action: actionsType) => dispatched.push(action)}))
+        const btn = component.find('Styled(Button)').at(0)
         btn.simulate('click')
         expect(dispatched).toEqual([{type: SENT_REQUEST}, {type: GET_MORE_JOKES, payload: '1'}])
-    })
-
-    it('Show the correct joke', () => {
-        const mockStore = {
-            jokesState: {
-                jokes: [{id: 1, joke: 'haha', categories: ['nerdy']}],
-                sortedJokes: [{id: 1, joke: 'haha', categories: ['nerdy']}],
-                categories: [],
-                category: 'all',
-                initialRender: true,
-                joke: '',
-                isLoading: true,
-                error: {message: ''}
-            },
-            dispatch: jest.fn()
-        }
-        const component = createJokesComponent(mockStore)
-        expect(component.find('ModalBody').text()).toEqual(mockStore.jokesState.jokes[0].joke)
     })
 })
