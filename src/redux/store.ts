@@ -1,6 +1,6 @@
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import {composeWithDevTools} from 'redux-devtools-extension'
+import {composeWithDevTools} from 'redux-devtools-extension';
 
 import jokeReducer, {jokesWatcher, StateType} from './ducks/jokes';
 
@@ -17,4 +17,4 @@ export type RootState = {
 export const store = createStore(rootReducer,
     composeWithDevTools(applyMiddleware(sagaMiddleware)));
 
-sagaMiddleware.run(jokesWatcher)
+sagaMiddleware.run(jokesWatcher);

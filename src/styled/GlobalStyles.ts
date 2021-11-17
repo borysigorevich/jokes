@@ -4,11 +4,11 @@ export const Global = createGlobalStyle`
   * {
     font-family: 'Nunito', sans-serif;
   }
-  
+
   .list-group li {
     cursor: pointer;
   }
-  
+
   .link {
     color: inherit;
     text-decoration: none;
@@ -31,5 +31,4 @@ export const theme = {
         sm_border_radius: '.25rem',
         sm_border_teal: '1px solid teal',
         lg_button: '9rem'
-    }
-}
+    }}

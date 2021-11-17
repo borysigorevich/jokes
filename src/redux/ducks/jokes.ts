@@ -1,5 +1,5 @@
 import {call, put, takeEvery} from 'redux-saga/effects';
-import {API} from "../../api";
+import {API} from '../../api';
 import {SagaIterator} from "redux-saga";
 
 export const SENT_REQUEST = 'axels-test/joke/SENT_REQUEST';
@@ -241,7 +241,6 @@ export const getCategories = (): getCategoriesType => {
     }
 }
 //*********************
-
 
 //SAGA WORKERS
 export function* getJokesWorker(action: getJokesType): SagaIterator {

@@ -25,4 +25,4 @@ const Joke = () => {
     );
 };
 
-export default Joke
+export default Joke;

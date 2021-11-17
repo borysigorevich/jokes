@@ -1,4 +1,4 @@
-import Enzyme, {shallow} from "enzyme";
+import Enzyme, {shallow} from 'enzyme';
 import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17';
 import {Jokes} from '../components/jokes/Jokes';
 import {
@@ -7,7 +7,7 @@ import {
     sentRequestType,
     setSortedJokesType,
     StateType
-} from "../redux/ducks/jokes";
+} from '../redux/ducks/jokes';
 import {mockStore} from "./utils";
 
 Enzyme.configure({adapter: new EnzymeAdapter()})

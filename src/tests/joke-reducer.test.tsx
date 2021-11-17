@@ -1,9 +1,9 @@
-import {runSaga} from "redux-saga";
+import {runSaga} from 'redux-saga';
 
 import jokeReducer, {
     getCategoriesWorker,
     getJokesWorker,
-    getMoreJokesWorker,
+    getMoreJokesWorker, JokeType,
     REQUEST_FAILURE, requestFailure, requestFailureType, SENT_REQUEST, sentRequestType,
     SET_CATEGORIES,
     SET_JOKES,
@@ -14,13 +14,18 @@ import jokeReducer, {
     setJokes,
     setJokesType,
     setMoreJokes, setMoreJokesType, setSortedJokesType
-} from "../redux/ducks/jokes";
+} from '../redux/ducks/jokes';
 import {API} from "../api";
 import {mockState} from "./utils";
 
 describe('reducer', () => {
+    let dummyJokes: Array<JokeType>
 
-    test('SET_JOKES', () => {
+    beforeEach(() => {
+        dummyJokes = [{id: 1, joke: 'ha-ha', categories: ['nerdy']}]
+    })
+
+    it('should jokes value', () => {
 
         const state = mockState({jokes: [{id: 1, joke: 'haha', categories: ['nerdy']}]})
 
@@ -38,7 +43,7 @@ describe('reducer', () => {
         })
     })
 
-    test('SET_CATEGORIES', () => {
+    it('should update categories value', () => {
         const state = mockState({})
 
         const action = {
@@ -53,7 +58,7 @@ describe('reducer', () => {
         })
     })
 
-    test('SET_MORE_JOKES', () => {
+    it('should update jokes and sortedJokes value', () => {
         const state = mockState({
             jokes: [{id: 1, joke: 'first', categories: ['nerdy']}, {
                 id: 2,
@@ -80,7 +85,7 @@ describe('reducer', () => {
 
     })
 
-    test('SET_SORTED_JOKES', () => {
+    it('should not update categories', () => {
         const state = mockState({
             jokes: [{id: 1, joke: 'haha', categories: ['nerdy']}],
             sortedJokes: [{id: 1, joke: 'haha', categories: ['nerdy']}]
@@ -103,7 +108,7 @@ describe('reducer', () => {
         })
     })
 
-    test('SENT_REQUEST', () => {
+    it('should update isLoading value', () => {
         const state = mockState({})
 
         const action = {
@@ -116,10 +121,8 @@ describe('reducer', () => {
         })
     })
 
-    test('REQUEST_FAILURE', () => {
+    it('should update error value', () => {
         const state = mockState({})
-
-
         const action = {
             type: REQUEST_FAILURE,
             payload: 'error'
@@ -132,8 +135,7 @@ describe('reducer', () => {
         })
     })
 
-    test('getJokesWorker', async () => {
-        const dummyJokes = [{id: 1, joke: 'Ha-ha', categories: ['nerdy']}]
+    it('should call setJokes action creater', async () => {
 
         const getJokes = jest.spyOn(API, 'getJokes').mockImplementation(() => {
             return Promise.resolve(dummyJokes)
@@ -145,13 +147,12 @@ describe('reducer', () => {
             dispatch: (action: setJokesType) => dispatched.push(action)
         }, getJokesWorker, {type: 'axels-test/joke/GET_JOKES', payload: {category: 'nerdy', numOfJokes: '1'}})
         expect(getJokes).toHaveBeenCalledTimes(1)
-        expect(dispatched).toEqual([setJokes([{id: 1, joke: 'Ha-ha', categories: ['nerdy']}], 'nerdy')])
+        expect(dispatched).toEqual([setJokes([{id: 1, joke: 'ha-ha', categories: ['nerdy']}], 'nerdy')])
         getJokes.mockClear()
     })
 
-    test('getCategoriesWorker', async () => {
+    it('should call setCategories action creator', async () => {
         const dummyCategories = ['nerdy', 'explicit']
-
         const getCategories = jest.spyOn(API, 'getCategories').mockImplementation(() => Promise.resolve(dummyCategories))
 
         const dispatched: Array<setCategoriesType> = []
@@ -163,8 +164,7 @@ describe('reducer', () => {
         getCategories.mockClear()
     })
 
-    test('getMoreJokesWorker', async () => {
-        const dummyJokes = [{id: 1, joke: 'ha-ha', categories: ['nerdy']}]
+    it('should call setMoreJokes action creator', async () => {
         const getJokes = jest.spyOn(API, 'getMoreJokes').mockImplementation(() => Promise.resolve(dummyJokes))
 
         const dispatched: Array<setJokesType> = []
@@ -176,7 +176,7 @@ describe('reducer', () => {
         getJokes.mockClear()
     })
 
-    test('getMoreJokesWorkerError', async () => {
+    it('should call requestFailure action creator', async () => {
         const dummyError = {name: 'error', message: 'error'}
         const getJokes = jest.spyOn(API, 'getMoreJokes').mockImplementation(() => Promise.reject(dummyError))
 
