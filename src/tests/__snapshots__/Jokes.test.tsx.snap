@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Jokes snapshot 1`] = `
+<styled.div>
+  <Styled(Navbar)
+    className="justify-content-between"
+    expand="md"
+  >
+    <Styled(NavbarBrand)>
+      Choose the category
+    </Styled(NavbarBrand)>
+    <NavbarToggle
+      aria-controls="navbar"
+      label="Toggle navigation"
+    />
+    <NavbarCollapse
+      className="justify-content-end"
+      id="navbar"
+    >
+      <Nav
+        fill={false}
+        justify={false}
+      >
+        <Styled(NavLink)
+          as={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "render": [Function],
+            }
+          }
+          className="mb-2 mt-3 mt-sm-0 mb-md-0 me-md-2"
+          key="all"
+          to="/all"
+        >
+          All
+        </Styled(NavLink)>
+      </Nav>
+    </NavbarCollapse>
+  </Styled(Navbar)>
+  <CardGroup
+    className="justify-content-center"
+  >
+    <ListGroup
+      as="ul"
+      className="w-100"
+    >
+      <p
+        className="fs-3 text-secondary"
+      >
+        Ooops!! There are no jokes! Get Some!
+      </p>
+    </ListGroup>
+    <Modal
+      animation={true}
+      autoFocus={true}
+      backdrop="static"
+      dialogAs={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "render": [Function],
+        }
+      }
+      enforceFocus={true}
+      keyboard={false}
+      onHide={[Function]}
+      restoreFocus={true}
+      show={true}
+    >
+      <ModalHeader
+        closeButton={true}
+        closeLabel="Close"
+      >
+        <ModalTitle>
+          Joke
+        </ModalTitle>
+      </ModalHeader>
+      <ModalBody />
+      <ModalFooter>
+        <Button
+          active={false}
+          disabled={false}
+          onClick={[Function]}
+          variant="secondary"
+        >
+          Close
+        </Button>
+      </ModalFooter>
+    </Modal>
+  </CardGroup>
+  <styled.div>
+    <Spinner
+      animation="border"
+    />
+  </styled.div>
+  <styled.div>
+    <Styled(Button)
+      className="btn-secondary"
+      onClick={[Function]}
+    >
+      Get One Joke!
+    </Styled(Button)>
+    <Styled(Button)
+      className="btn-secondary"
+      onClick={[Function]}
+    >
+      Get Three Jokes!
+    </Styled(Button)>
+    <Styled(Button)
+      className="btn-secondary"
+      onClick={[Function]}
+    >
+      Get Five Jokes!
+    </Styled(Button)>
+  </styled.div>
+</styled.div>
+`;

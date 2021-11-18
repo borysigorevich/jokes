@@ -1,31 +1,28 @@
-import React, {useEffect} from 'react'
-import {useParams} from "react-router-dom";
-import {Container} from "./jokeStyles";
-import {useDispatch, useSelector} from "react-redux";
-import {getJoke} from "../../redux/store/joke-reducer";
-import {RootState} from "../../redux/store/store";
+import React, {useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {RootState} from '../../redux/store';
 
 const Joke = () => {
-    const jokesState = useSelector((state: RootState) => state.jokes)
-    const dispatch = useDispatch()
+	const jokesState = useSelector((state: RootState) => state.jokes);
+	const dispatch = useDispatch();
 
-    const params = useParams()
+	const params = useParams();
 
-    console.log(params)
+	useEffect(() => {
+		try {
+			console.log('here');
+		} catch (err) {
+			console.log(err);
+		}
+	}, [params.id, dispatch]);
 
-    useEffect(() => {
-        try {
-            dispatch(getJoke(params.id))
-        } catch (err) {
-            console.log(err)
-        }
-    }, [params.id, dispatch])
-
-    return (
-        <Container>
-            <i>{jokesState.joke}</i>
-        </Container>
-    );
+	return (
+		<>
+			<i>{jokesState.joke}</i>
+		</>
+	);
 };
 
-export default Joke
+export default Joke;
