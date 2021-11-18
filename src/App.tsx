@@ -10,19 +10,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const App = () => (
-    <ThemeProvider theme={theme}>
-        <Provider store={store}>
-            <Router>
-                <Container className='App py-3'>
-                    <Routes>
-                        <Route path={'/'} element={<Jokes/>}/>
-                        <Route path={'/:category'} element={<Jokes/>}/>
-                        <Route path={'/joke/:joke'} element={<Jokes/>}/>
-                    </Routes>
-                </Container>
-            </Router>
-        </Provider>
-    </ThemeProvider>
+	<ThemeProvider theme={theme}>
+		<Provider store={store}>
+			<Router>
+				<Container className='App py-3'>
+					<Routes>
+						<Route path={'/'} element={<Jokes/>}/>
+						<Route path={'/:category'} element={<Jokes/>}/>
+						<Route path={'/joke/:joke'} element={<Jokes/>}/>
+					</Routes>
+				</Container>
+			</Router>
+		</Provider>
+	</ThemeProvider>
 );
 
 export default App;

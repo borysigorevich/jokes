@@ -5,24 +5,24 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 
 const Joke = () => {
-    const jokesState = useSelector((state: RootState) => state.jokes);
-    const dispatch = useDispatch();
+	const jokesState = useSelector((state: RootState) => state.jokes);
+	const dispatch = useDispatch();
 
-    const params = useParams();
+	const params = useParams();
 
-    useEffect(() => {
-        try {
+	useEffect(() => {
+		try {
+			console.log('here');
+		} catch (err) {
+			console.log(err);
+		}
+	}, [params.id, dispatch]);
 
-        } catch (err) {
-            console.log(err)
-        }
-    }, [params.id, dispatch])
-
-    return (
-        <>
-            <i>{jokesState.joke}</i>
-        </>
-    );
+	return (
+		<>
+			<i>{jokesState.joke}</i>
+		</>
+	);
 };
 
 export default Joke;

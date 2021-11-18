@@ -7,14 +7,14 @@ import jokeReducer, {jokesWatcher, StateType} from './ducks/jokes';
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
-    jokes: jokeReducer
-})
+	jokes: jokeReducer
+});
 
 export type RootState = {
-    jokes: StateType
+	jokes: StateType
 }
 
 export const store = createStore(rootReducer,
-    composeWithDevTools(applyMiddleware(sagaMiddleware)));
+	composeWithDevTools(applyMiddleware(sagaMiddleware)));
 
 sagaMiddleware.run(jokesWatcher);
